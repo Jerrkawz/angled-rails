@@ -1,0 +1,1 @@
+angular.module("templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("templates/index.html","Test {{1 + 2}}");}]);
