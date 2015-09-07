@@ -41,7 +41,7 @@ gulp.task('less', ['bower'], function() {
 });
 
 gulp.task('scripts', function() {
-	gulp.src(['./app/**/*.js', '!./app/bower_components/**'])
+	gulp.src('./app/**/*.js')
         .pipe(ngAnnotate())
 		.pipe(uglify({
 
