@@ -1,0 +1,8 @@
+/*
+ * Add any required files here similar to the rails manifest file
+ * gulp-include doesnt seem to like multiline comments, so each include should be a separate comment
+ *
+ * Note: Only vendor css goes in here (ie. bower_components), all other css is automatically included
+ */
+
+/*= require ../bower_components/bootstrap/dist/css/bootstrap.css */

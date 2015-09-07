@@ -5,10 +5,11 @@ var path = require('path');
 var jshint = require('gulp-jshint');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
+var include = require('gulp-include');
 var minifyCSS = require('gulp-minify-css');
 var bower = require('gulp-bower');
 var less = require('gulp-less');
-//var connect = require('gulp-connect');
+var connect = require('gulp-connect');
 var angularTemplatecache = require('gulp-angular-templatecache');
 var ngAnnotate = require('gulp-ng-annotate');
 
@@ -19,9 +20,18 @@ gulp.task('lint', function() {
         .pipe(jshint.reporter('default'));
 });
 
+gulp.task('vendorLess', ['bower'], function() {
+    //combine all js files of the app
+    gulp.src('./app/vendor.css')
+        .pipe(include())
+        .pipe(minifyCSS())
+        .pipe(concat('vendor.min.css'))
+        .pipe(gulp.dest('../server/public/assets/stylesheets'));
+});
+
 gulp.task('less', ['bower'], function() {
     //combine all js files of the app
-    gulp.src('./app/styles/master.less')
+    gulp.src(['./app/**/*.css', '!./app/bower_components/**'])
         .pipe(less({
             paths: [path.join(__dirname, 'less', 'includes')]
         }))
@@ -51,14 +61,10 @@ gulp.task('templates', function() {
 
 gulp.task('vendorJS', ['bower'], function() {
     //concatenate vendor JS files
-    gulp.src([
-        './bower_components/jquery/dist/jquery.js',
-        './bower_components/angular/angular.js',
-        './bower_components/angular-route/angular-route.js',
-        './bower_components/angular-bootstrap/ui-bootstrap.js',
-        './bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
-    ])
-        .pipe(concat('lib.js'))
+    gulp.src('./app/vendor.js')
+        .pipe(include())
+        .pipe(uglify())
+        .pipe(concat('vendor.min.js'))
         .pipe(gulp.dest('../server/public/assets/javascripts'));
 });
 
@@ -83,13 +89,13 @@ gulp.task('bower', function() {
         .pipe(gulp.dest('./bower_components'));
 });
 
-//gulp.task('connect', function (){
-//    connect.server({
-//        root: ['../server/public'],
-//        port: 9000,
-//        livereload: true
-//    });
-//});
+gulp.task('connect', function (){
+    connect.server({
+        root: ['../server/public'],
+        port: 9000,
+        livereload: true
+    });
+});
 
-gulp.task('build', ['lint', 'bower', 'less', 'scripts', 'vendorJS', 'templates']);
-gulp.task('default', ['lint', 'less', 'scripts', 'vendorJS', 'templates', 'watch']);
+gulp.task('build', ['lint', 'bower', 'less', 'scripts', 'vendorJS', 'vendorLess', 'templates']);
+gulp.task('default', ['lint', 'less', 'vendorLess', 'scripts', 'vendorJS', 'templates', 'watch']);
