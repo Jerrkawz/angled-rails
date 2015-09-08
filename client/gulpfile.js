@@ -32,13 +32,19 @@ gulp.task('vendorLess', ['bower'], function() {
 
 gulp.task('less', ['bower'], function() {
     //combine all js files of the app
-    gulp.src(['./app/**/*.css', '!./app/bower_components/**'])
-        .pipe(less({
-            paths: [path.join(__dirname, 'less', 'includes')]
-        }))
+    gulp.src('./app/**/*.css')
         .pipe(minifyCSS())
         .pipe(concat('styles.min.css'))
         .pipe(gulp.dest('../server/public/assets/stylesheets'));
+});
+
+gulp.task('vendorScripts', ['bower'], function() {
+    //concatenate vendor JS files
+    gulp.src('./app/vendor.js')
+        .pipe(include())
+        .pipe(uglify())
+        .pipe(concat('vendor.min.js'))
+        .pipe(gulp.dest('../server/public/assets/javascripts'));
 });
 
 gulp.task('scripts', function() {
@@ -58,15 +64,6 @@ gulp.task('templates', function() {
         .pipe(angularTemplatecache('templates.min.js', {
             standalone: true
         }))
-        .pipe(gulp.dest('../server/public/assets/javascripts'));
-});
-
-gulp.task('vendorJS', ['bower'], function() {
-    //concatenate vendor JS files
-    gulp.src('./app/vendor.js')
-        .pipe(include())
-        .pipe(uglify())
-        .pipe(concat('vendor.min.js'))
         .pipe(gulp.dest('../server/public/assets/javascripts'));
 });
 
@@ -99,5 +96,5 @@ gulp.task('connect', function (){
     });
 });
 
-gulp.task('build', ['lint', 'bower', 'less', 'scripts', 'vendorJS', 'vendorLess', 'templates']);
-gulp.task('default', ['lint', 'less', 'vendorLess', 'scripts', 'vendorJS', 'templates', 'watch']);
+gulp.task('build', ['lint', 'bower', 'less', 'scripts', 'vendorScripts', 'vendorLess', 'templates']);
+gulp.task('default', ['lint', 'less', 'vendorLess', 'scripts', 'vendorScripts', 'templates', 'watch']);
