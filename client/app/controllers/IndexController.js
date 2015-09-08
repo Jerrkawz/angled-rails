@@ -1,6 +1,9 @@
-controllers = angular.module('controllers');
+(function (){
+	'use strict';
+	var controllers = angular.module('controllers');
 
-controllers.controller('IndexController', function () {
-    
-});
+	controllers.controller('IndexController', function () {
+
+	});
+})();
                        

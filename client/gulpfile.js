@@ -6,6 +6,7 @@ var jshint = require('gulp-jshint');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var include = require('gulp-include');
+var order = require('gulp-order');
 var minifyCSS = require('gulp-minify-css');
 var bower = require('gulp-bower');
 var less = require('gulp-less');
@@ -42,6 +43,7 @@ gulp.task('less', ['bower'], function() {
 
 gulp.task('scripts', function() {
 	gulp.src('./app/**/*.js')
+		.pipe(order(['app.js'],{ base : './app/'}))
         .pipe(ngAnnotate())
 		.pipe(uglify({
 
