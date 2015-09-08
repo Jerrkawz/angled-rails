@@ -46,14 +46,14 @@ gulp.task('scripts', function() {
 		.pipe(uglify({
 
 		}))
-        .pipe(concat('app.js'))
+        .pipe(concat('app.min.js'))
 		.pipe(gulp.dest('../server/public/assets/javascripts'))
 });
 
 gulp.task('templates', function() {
     //combine all template files of the app into a js file
     gulp.src('./app/**/*.html')
-        .pipe(angularTemplatecache('templates.js', {
+        .pipe(angularTemplatecache('templates.min.js', {
             standalone: true
         }))
         .pipe(gulp.dest('../server/public/assets/javascripts'));
